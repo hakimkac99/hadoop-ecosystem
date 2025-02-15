@@ -1,0 +1,82 @@
+version: "3.7"
+services:
+  namenode:
+    image: hadoop:latest
+    ports: 
+        - "9870:9870"
+        - "8088:8088"
+    command: > 
+      bash -c "hdfs namenode & yarn resourcemanager"
+    hostname: hdfs-namenode
+
+  datanode-1:
+    image: hadoop:latest
+    hostname: datanode1
+    depends_on: 
+        - namenode
+    command: >
+      bash -c "hdfs datanode & yarn nodemanager"
+    ports:
+      - "9864:9864"
+    links:
+        - namenode:hdfs-namenode
+    volumes:
+      - ./hdfs-data-1:/hadoop/dfs/data
+
+  datanode-2:
+    image: hadoop:latest
+    hostname: datanode2
+    depends_on: 
+        - namenode
+    command: >
+      bash -c "hdfs datanode & yarn nodemanager "
+    ports:
+      - "9865:9864"
+    links:
+        - namenode:hdfs-namenode
+    volumes:
+      - ./hdfs-data-2:/hadoop/dfs/data
+
+  hive-metastore:
+    image: apache/hive:4.0.1
+    platform: linux/arm64
+    hostname: metastore
+    ports:
+      - 9083:9083
+    environment:
+      - SERVICE_NAME=metastore
+      - DB_DRIVER=postgres
+      - SERVICE_OPTS=-Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore_db -Djavax.jdo.option.ConnectionUserName=hive -Djavax.jdo.option.ConnectionPassword=password
+    volumes:
+      - ./hive/warehouse:/opt/hive/data/warehouse
+      - ./hive/postgresql-42.7.5.jar:/opt/hive/lib/postgresql-42.6.0.jar
+    depends_on:
+      - hive-metastore-db
+
+  hive-metastore-db:
+    image: postgres:15.10
+    platform: linux/arm/v5
+    hostname: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./hive/metastore-db-data:/var/lib/postgresql/data      
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=hive
+      - POSTGRES_DB=metastore_db
+  hive-server:
+    image: apache/hive:4.0.1
+    platform: linux/arm64
+    ports:
+      - "10000:10000"
+      - "10002:10002"
+    depends_on:
+      - namenode
+      - datanode-1
+      - datanode-2
+      - hive-metastore
+    environment:
+      - SERVICE_NAME=hiveserver2
+      - SERVICE_OPTS=-Dhive.metastore.uris=thrift://metastore:9083
+      - IS_RESUME=true
