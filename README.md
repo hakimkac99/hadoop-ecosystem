@@ -4,7 +4,7 @@ This project is created for learning purposes.
 
 It provides a way to test Hadoop related tasks in local machine. All components are run in docker environment.
 
-Note that only a basic Hadoop components are part of this project.
+Note that only basic Hadoop components are part of this project.
 
 # Code structure
 
@@ -25,7 +25,9 @@ This image installs Java 8, Hadoop 3.3.6 and YARN.
 Hadoop Namenode is responsible for managing a set of data nodes. Namenode does not contain actual data. It stores metadata.
 
 * In the `docker-compose` file the Namenode is created within the `namenode` service.
-* Access from the UI : (TODO)
+* Access from the Name node UI : http://localhost:9870/
+
+    ![Alt text](doc/namenode-ui.png)
 
 
 #### 1.2. Datanode
@@ -33,7 +35,11 @@ Hadoop Namenode is responsible for managing a set of data nodes. Namenode does n
 Responsible of storing actual data. A Hadoop cluster can have multiple datanodes. If a datanode goes down then it will not affect the Hadoop cluster due to replication.
 
 * In the `docker-compose` file, two Datanodes are created. `datanode-1` and `datanode-2` services.
-* Access from the UI : (TODO)
+* Access from the UI : 
+    * datanode-1 : http://localhost:9864
+    * datanode-2 : http://localhost:9865
+
+    ![Alt text](doc/datanode-ui.png)
 
 
 #### 1.3. HDFS (Hadoop Distributed file system)
@@ -41,20 +47,24 @@ Responsible of storing actual data. A Hadoop cluster can have multiple datanodes
 This is the file system of a Hadoop cluster. When a file is loaded into HDFS, it is actually split to multiple blocks and each block will be stored in multiple data nodes.
 This will enable fault tolerance.
 
-* Basic commands (TODO)
+* Basic HDFS commands (TODO)
 
 #### 1.4. YARN (Yet another resource negotiator)
 
 Manage the Hadoop cluster resources, schedule compute resources, allocate resources for jobs execution etc. 
 
+* In the `docker-compose` file, YARN is part of both Namenode and Datanode services. Yarn Resource Manager is run in the Namenode, and YARN Node Manager is run in the Datanodes.
+* Access YARN from the UI : http://localhost:8088/
+
+    ![Alt text](doc/yarn-ui.png)
 
 ### 2. Hive (TODO)
 
 
 # TODO
 
-* [code-structure] split the main docker-compose.yml file to multiple service specific files. (One file for Hadoop cluster, on file for Hive etc.)
+* [code-structure] split the main docker-compose.yml file to multiple service specific files. (One file for Hadoop cluster, one file for Hive etc.)
 * [design] add the project technical architecture design of different services and components.
-* [documentation] add hive service documentation to README file
+* [documentation] add hive service documentation to the README file
 * [configuration] ability to update Hadoop cluster default settings (namenode, datanode and YARN) using a local volume.
  

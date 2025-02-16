@@ -65,6 +65,8 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=hive
       - POSTGRES_DB=metastore_db
+
+      
   hive-server:
     image: apache/hive:4.0.1
     platform: linux/arm64
