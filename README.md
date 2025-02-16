@@ -65,13 +65,31 @@ Manage the Hadoop cluster resources, schedule compute resources, allocate resour
 
     ![Alt text](doc/yarn-ui.png)
 
-### 2. Hive (TODO)
+### 2. Apache Hive
+Apache hive is a distributed data warehouse system. https://hive.apache.org/
 
+In this project Hive is created on top of the Hadoop cluster explained above. It can also work on other distributed systems like S3.
+Hive only manages Tables structures and metadata, actual data is saved in HDFS. 
+
+* In the `docker-compose` file, three services are created for managing the Hive local stack : 
+    * hive-server service : Responsible for creating the Hive Server 2 to enable running queries against Hive. It interacts with the Hive metastore behind the scenes.
+    * hive-metastore service : The Hive metastore manages and stores the structure of tables/ columns etc. in the data warehouse. It serializes and deserializes data from hdfs.
+    * hive-metastore-db : Is a Postgresql database which the Hive Metastore uses as storage for metadata.
+
+* Hive server and Hive metastore services are created using the official apache Hive Docker image. https://hub.docker.com/r/apache/hive
+
+* Access Hive Server UI : http://localhost:10002
+
+    ![alt text](image.png)
+
+* Interact with hive : TODO
+    * Connect to Hive : 
+    * Create a table : 
+    * Load data to a table : 
 
 # TODO
 
 * [code-structure] split the main docker-compose.yml file to multiple service specific files. (One file for Hadoop cluster, one file for Hive etc.)
 * [design] add the project technical architecture design of different services and components.
-* [documentation] add hive service documentation to the README file
 * [configuration] ability to update Hadoop cluster default settings (namenode, datanode and YARN) using a local volume.
  
