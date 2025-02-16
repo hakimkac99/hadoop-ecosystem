@@ -24,7 +24,7 @@ This image installs Java 8, Hadoop 3.3.6 and YARN.
 
 Hadoop Namenode is responsible for managing a set of data nodes. Namenode does not contain actual data. It stores metadata.
 
-* In the `docker-compose` file the Namenode is created within the `namenode` service.
+* In the `docker-compose` file the Namenode is created in the `namenode` service.
 * Access from the Name node UI : http://localhost:9870/
 
     ![Alt text](doc/namenode-ui.png)
@@ -47,7 +47,12 @@ Responsible of storing actual data. A Hadoop cluster can have multiple datanodes
 This is the file system of a Hadoop cluster. When a file is loaded into HDFS, it is actually split to multiple blocks and each block will be stored in multiple data nodes.
 This will enable fault tolerance.
 
-* Basic HDFS commands (TODO)
+To interact with HDFS, multiple options are there : 
+* By entering the Namenode container :
+    * `docker exec -it [namenode_container_id] bash`
+    * Run HDFS commands : e.g. `hadoop fs -ls /`
+* By creating another hadoop client container and connecting it to the Namenode.
+...
 
 #### 1.4. YARN (Yet another resource negotiator)
 
