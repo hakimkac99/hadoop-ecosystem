@@ -47,12 +47,14 @@ Responsible of storing actual data. A Hadoop cluster can have multiple datanodes
 This is the file system of a Hadoop cluster. When a file is loaded into HDFS, it is actually split to multiple blocks and each block will be stored in multiple data nodes.
 This will enable fault tolerance.
 
-To interact with HDFS, multiple options are there : 
-* By entering the Namenode container :
-    * `docker exec -it [namenode_container_id] bash`
-    * Run HDFS commands : e.g. `hadoop fs -ls /`
-* By creating another hadoop client container and connecting it to the Namenode.
-...
+* To interact with HDFS, multiple options are there : 
+    * By entering the Namenode container :
+        * `docker exec -it [namenode_container_id] bash`
+        * Run HDFS commands : e.g. `hadoop fs -ls /`
+    * By creating another hadoop client container and connecting it to the Namenode ...
+
+* It is also possible to interact with HDFS using the Namenode UI : http://localhost:9870/explorer.html
+    ![alt text](doc/hdfs-exporer-ui.png)
 
 #### 1.4. YARN (Yet another resource negotiator)
 
