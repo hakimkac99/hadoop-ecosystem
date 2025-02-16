@@ -80,7 +80,7 @@ Hive only manages Tables structures and metadata, actual data is saved in HDFS.
 
 * Access Hive Server UI : http://localhost:10002
 
-    ![alt text](image.png)
+    ![alt text](doc/hive-server-ui.png)
 
 * Interact with hive : TODO
     * Connect to Hive : 
