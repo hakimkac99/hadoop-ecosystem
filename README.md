@@ -82,7 +82,7 @@ Hive provides HiveQL as a SQL-like query tool. It executes MapReduce jobs behind
 
 * Access Hive Server UI : http://localhost:10002
 
-    ![alt text](doc/hive-server-ui.png)
+    ![alt text](doc/hive-server-ui.png?)
 
 * Interact with hive :
     * Connect to Hive : 
