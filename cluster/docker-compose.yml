@@ -8,6 +8,8 @@ services:
     command: > 
       bash -c "hdfs namenode & yarn resourcemanager"
     hostname: hdfs-namenode
+    volumes:
+     - ./hdfs-data:/data/dfs/data/
 
   datanode-1:
     image: hadoop:latest
@@ -20,8 +22,6 @@ services:
       - "9864:9864"
     links:
         - namenode:hdfs-namenode
-    volumes:
-      - ./hdfs-data-1:/hadoop/dfs/data
 
   datanode-2:
     image: hadoop:latest
@@ -34,8 +34,6 @@ services:
       - "9865:9864"
     links:
         - namenode:hdfs-namenode
-    volumes:
-      - ./hdfs-data-2:/hadoop/dfs/data
 
   hive-metastore:
     image: apache/hive:4.0.1
