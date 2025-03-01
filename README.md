@@ -1,3 +1,18 @@
+# Table of contents
+
+- [Table of contents](#table-of-contents)
+- [Local Hadoop ecosystem project](#local-hadoop-ecosystem-project)
+- [Code structure](#code-structure)
+  - [Currently available components](#currently-available-components)
+    - [1. Hadoop cluster](#1-hadoop-cluster)
+      - [1.1. Namenode](#11-namenode)
+      - [1.2. Datanode](#12-datanode)
+      - [1.3. HDFS (Hadoop Distributed file system)](#13-hdfs-hadoop-distributed-file-system)
+      - [1.4. YARN (Yet another resource negotiator)](#14-yarn-yet-another-resource-negotiator)
+    - [2. Apache Hive](#2-apache-hive)
+- [TODO](#todo)
+
+
 # Local Hadoop ecosystem project
 
 This project is created for learning purposes. 
@@ -30,7 +45,7 @@ This image installs Java 8, Hadoop 3.3.6 and YARN.
 
 Hadoop Namenode is responsible for managing a set of data nodes. Namenode does not contain actual data. It stores metadata.
 
-* In the `docker-compose` file the Namenode is created in the `namenode` service.
+* In the `cluster/compose.cluster.yml` file the Namenode is created in the `namenode` service.
 * Access the Namenode UI : http://localhost:9870/
 
     ![Alt text](doc/namenode-ui.png)
@@ -40,7 +55,7 @@ Hadoop Namenode is responsible for managing a set of data nodes. Namenode does n
 
 Responsible of storing actual data. A Hadoop cluster can have multiple datanodes. If a datanode goes down then it will not affect the Hadoop cluster due to replication.
 
-* In the `docker-compose` file, two Datanodes are created. `datanode-1` and `datanode-2` services.
+* In the `cluster/compose.cluster.yml` file, two Datanodes are created. `datanode-1` and `datanode-2` services.
 * Access the Datanode UI : 
     * datanode-1 : http://localhost:9864
     * datanode-2 : http://localhost:9865
@@ -66,7 +81,7 @@ This will enable fault tolerance.
 
 Manage the Hadoop cluster resources, schedule compute resources, allocate resources for jobs execution etc. 
 
-* In the `docker-compose` file, YARN is part of both Namenode and Datanode services. Yarn Resource Manager is run in the Namenode, and YARN Node Manager is run in the Datanodes.
+* In the `cluster/compose.cluster.yml` file, YARN is part of both Namenode and Datanode services. Yarn Resource Manager is run in the Namenode, and YARN Node Manager is run in the Datanodes.
 * Access YARN from the UI : http://localhost:8088/
 
     ![Alt text](doc/yarn-ui.png)
@@ -82,7 +97,7 @@ Hive only manages Tables structures and metadata, actual data is saved in HDFS.
 
 Hive provides HiveQL as a SQL-like query tool. It executes MapReduce jobs behind the scenes.
 
-* In the `docker-compose` file, three services are created for managing the Hive local stack : 
+* In the `cluster/compose.hive.yml` file, three services are created for managing the Hive local stack : 
     * hive-server service : Responsible for creating the Hive Server 2 to enable running queries against Hive. It interacts with the Hive metastore behind the scenes.
     * hive-metastore service : The Hive metastore manages and stores the structure of tables/ columns etc. in the data warehouse. It serializes and deserializes data from HDFS.
     * hive-metastore-db : A Postgresql database used by Hive Metastore in order to stor metadata.
