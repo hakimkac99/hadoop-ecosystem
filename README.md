@@ -10,6 +10,7 @@ Note that only basic Hadoop components are part of this project.
 
 * `cluster/compose.cluster.yml` contains services allowing to set up a Hadoop cluster.
     * Start only Hadoop cluster : `docker compose -f cluster/compose.cluster.yml up -d`
+    
 * `cluster/compose.hive.yml` contains services allowing to set up Hive services.
     * Start Hive and the Hadoop cluster : `docker compose -f cluster/compose.hive.yml up -d`
 
