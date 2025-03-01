@@ -2,7 +2,7 @@ Table of contents
 
 - [Local Hadoop ecosystem project](#local-hadoop-ecosystem-project)
 - [Code structure](#code-structure)
-  - [Currently available components](#currently-available-components)
+- [Currently available components](#currently-available-components)
     - [1. Hadoop cluster](#1-hadoop-cluster)
       - [1.1. Namenode](#11-namenode)
       - [1.2. Datanode](#12-datanode)
@@ -29,7 +29,7 @@ Note that only basic Hadoop components are part of this project.
     * Start Hive and the Hadoop cluster : `docker compose -f cluster/compose.hive.yml up -d`
 
 
-## Currently available components
+# Currently available components
 
 ### 1. Hadoop cluster
 
