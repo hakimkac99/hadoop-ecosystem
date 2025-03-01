@@ -1,6 +1,5 @@
-# Table of contents
+Table of contents
 
-- [Table of contents](#table-of-contents)
 - [Local Hadoop ecosystem project](#local-hadoop-ecosystem-project)
 - [Code structure](#code-structure)
   - [Currently available components](#currently-available-components)
