@@ -46,7 +46,6 @@ services:
       - DB_DRIVER=postgres
       - SERVICE_OPTS=-Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore_db -Djavax.jdo.option.ConnectionUserName=hive -Djavax.jdo.option.ConnectionPassword=password
     volumes:
-      - ./hive/warehouse:/opt/hive/data/warehouse
       - ./hive/postgresql-42.7.5.jar:/opt/hive/lib/postgresql-42.6.0.jar
     depends_on:
       - hive-metastore-db
