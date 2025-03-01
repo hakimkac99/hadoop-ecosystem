@@ -8,12 +8,17 @@ Note that only basic Hadoop components are part of this project.
 
 # Code structure
 
-`cluster/docker-compose.yml` contains services allowing to set up a Hadoop cluster, Hive etc.
+* `cluster/compose.cluster.yml` contains services allowing to set up a Hadoop cluster.
+    * Start only Hadoop cluster : `docker compose -f cluster/compose.cluster.yml up -d`
+* `cluster/compose.hive.yml` contains services allowing to set up Hive services.
+    * Start Hive and the Hadoop cluster : `docker compose -f cluster/compose.hive.yml up -d`
 
 
 ## Currently available components
 
 ### 1. Hadoop cluster
+
+ ![alt text](doc/hadoop-cluster-archi.png?)
 
 The docker image used for the Hadoop cluster is built locally from the Dockerfile available in this repository : https://github.com/bigdatafoundation/docker-hadoop/blob/master/3.3.6/Dockerfile
 
@@ -66,6 +71,9 @@ Manage the Hadoop cluster resources, schedule compute resources, allocate resour
     ![Alt text](doc/yarn-ui.png)
 
 ### 2. Apache Hive
+
+![alt text](doc/hive-archi.png?)
+
 Apache hive is a distributed data warehouse system. https://hive.apache.org/
 
 In this project, Hive is created on top of the Hadoop cluster explained above. It can also work on top of other distributed systems like S3.
@@ -94,7 +102,7 @@ Hive provides HiveQL as a SQL-like query tool. It executes MapReduce jobs behind
             CREATE EXTERNAL TABLE IF NOT EXISTS USERS(
                 ID INT,
                 NAME STRING,
-                AGE INT
+                BIRTH_DATE DATE
             )
             ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
             location 'hdfs://namenode:9000/warehouse';
@@ -103,11 +111,10 @@ Hive provides HiveQL as a SQL-like query tool. It executes MapReduce jobs behind
         * `LOAD DATA INPATH 'hdfs://namenode:9000/users.csv' OVERWRITE INTO TABLE users;`
     * Query the table :
         * `SELECT * FROM users;`
-        ![alt text](doc/hive-users-query.png)
 
+    ![alt text](doc/hive-hdfs-interaction.png)
+    
 # TODO
 
-* [code-structure] split the main docker-compose.yml file to multiple service specific files. (One file for Hadoop cluster, one file for Hive etc.)
-* [design] add the project technical architecture design of different services and components.
-* [configuration] ability to update Hadoop cluster default settings (namenode, datanode and YARN) using a local volume.
+* [configuration] add the ability to update Hadoop cluster default settings (namenode, datanode and YARN) using a local volume.
  

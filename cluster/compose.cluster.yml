@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  namenode:
+    image: hadoop:latest
+    ports: 
+        - "9870:9870"
+        - "8088:8088"
+    command: > 
+      bash -c "hdfs namenode & yarn resourcemanager"
+    hostname: hdfs-namenode
+    volumes:
+     - ./hdfs-data:/data/dfs/data/
+
+  datanode-1:
+    image: hadoop:latest
+    hostname: datanode1
+    depends_on: 
+        - namenode
+    command: >
+      bash -c "hdfs datanode & yarn nodemanager"
+    ports:
+      - "9864:9864"
+    links:
+        - namenode:hdfs-namenode
+
+  datanode-2:
+    image: hadoop:latest
+    hostname: datanode2
+    depends_on: 
+        - namenode
+    command: >
+      bash -c "hdfs datanode & yarn nodemanager "
+    ports:
+      - "9865:9864"
+    links:
+        - namenode:hdfs-namenode
