@@ -97,9 +97,9 @@ Hive only manages Tables structures and metadata, actual data is saved in HDFS.
 Hive provides HiveQL as a SQL-like query tool. It executes MapReduce jobs behind the scenes.
 
 * In the `cluster/compose.hive.yml` file, three services are created for managing the Hive local stack : 
-    * hive-server service : Responsible for creating the Hive Server 2 to enable running queries against Hive. It interacts with the Hive metastore behind the scenes.
-    * hive-metastore service : The Hive metastore manages and stores the structure of tables/ columns etc. in the data warehouse. It serializes and deserializes data from HDFS.
-    * hive-metastore-db : A Postgresql database used by Hive Metastore in order to stor metadata.
+    * **hive-server service** : Responsible for creating the Hive Server 2 to enable running queries against Hive. It interacts with the Hive metastore behind the scenes.
+    * **hive-metastore service** : The Hive metastore manages and stores the structure of tables/ columns etc. in the data warehouse. It serializes and deserializes data from HDFS.
+    * **hive-metastore-db** : A Postgresql database used by Hive Metastore in order to stor metadata.
 
 * Hive server and Hive metastore services are created using the official apache Hive Docker image. https://hub.docker.com/r/apache/hive
 
