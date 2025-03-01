@@ -110,8 +110,6 @@ Hive provides HiveQL as a SQL-like query tool. It executes MapReduce jobs behind
 * Interact with hive :
     * Connect to Hive : 
         * `docker exec -it cluster-hive-server-1 beeline -u 'jdbc:hive2://localhost:10000/'`
-    * Create an example table on top of HDFS:
-        * `create table users(id string, name string, age int);`
     * Create an external table connected to HDFS : 
         ````
             CREATE EXTERNAL TABLE IF NOT EXISTS USERS(
