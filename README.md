@@ -129,5 +129,6 @@ Hive provides HiveQL as a SQL-like query tool. It executes MapReduce jobs behind
     
 # TODO
 
+* [feature] add Spark to the picture (YARN as the cluster manager).
 * [configuration] add the ability to update Hadoop cluster default settings (namenode, datanode and YARN) using a local volume.
  
