@@ -1,0 +1,19 @@
+include:
+  - compose.cluster.yml
+services:  
+  spark:
+    image: apache/spark-py:latest
+    environment:
+      - HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+      - PATH=/opt/spark/bin:$PATH
+      - PYSPARK_PYTHON=python3
+    volumes:
+      - ./hadoop-config:/opt/hadoop/etc/hadoop
+      - ./spark-apps:/opt/spark/work-dir/apps
+    ports:
+      - "4040:4040"
+    depends_on:
+      - namenode
+      - datanode-1
+      - datanode-2
+    command: tail -f /dev/null

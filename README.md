@@ -9,6 +9,7 @@ Table of contents
       - [1.3. HDFS (Hadoop Distributed file system)](#13-hdfs-hadoop-distributed-file-system)
       - [1.4. YARN (Yet another resource negotiator)](#14-yarn-yet-another-resource-negotiator)
     - [2. Apache Hive](#2-apache-hive)
+    - [2. Apache Spark](#2-apache-spark)
 - [TODO](#todo)
 
 
@@ -28,6 +29,8 @@ Note that only basic Hadoop components are part of this project.
 * `cluster/compose.hive.yml` contains services allowing to set up Hive services.
     * Start Hive and the Hadoop cluster : `docker compose -f cluster/compose.hive.yml up -d`
 
+* `cluster/compose.spark.yml` for starting PySpark client container.
+    * Start PySpark client container in order to deploy applications that run on top of YARN  : `docker compose -f cluster/compose.spark.yml up -d`
 
 # Currently available components
 
@@ -126,9 +129,28 @@ Hive provides HiveQL as a SQL-like query tool. It executes MapReduce jobs behind
         * `SELECT * FROM users;`
 
     ![alt text](doc/hive-hdfs-interaction.png)
-    
+
+
+### 2. Apache Spark
+
+Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.
+(https://spark.apache.org/)
+
+In this project, the objective is to run Spark jobs on top of the Hadoop cluster. In this case, Spark uses YARN as the cluster manager.
+
+* `cluster/compose.spark.yml` has one service with PySpark installed and configured to connect to the Hadoop cluster (YARN & HDFS) by providing the two configuration files `core-site.xml` and `yarn-site.xml`.
+
+* Deploy a sample Spark job to the Hadoop cluster :
+  * Put PySpark applications under `cluster/spark-apps` folder. A volume is configured, applications will be places under `~/work-dir/apps` in the client container.
+  * Deploy the sample Spark application on top of the Hadoop cluster
+    * `docker exec -it cluster-spark-1 spark-submit --master yarn --deploy-mode client apps/app.py`
+    * This application simply reads a CSV file from HDFS, then it shows results.
+    * Check job details in SPARK UI : `http://localhost:4040/jobs/`
+
+![alt text](doc/spark-ui.png)
+
+
 # TODO
 
-* [feature] add Spark to the picture (YARN as the cluster manager).
 * [configuration] add the ability to update Hadoop cluster default settings (namenode, datanode and YARN) using a local volume.
  
