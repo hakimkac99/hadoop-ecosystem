@@ -45,3 +45,7 @@ services:
       - SERVICE_NAME=hiveserver2
       - SERVICE_OPTS=-Dhive.metastore.uris=thrift://metastore:9083
       - IS_RESUME=true
+
+networks:
+  default:
+    name: hadoop-net

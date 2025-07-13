@@ -1,0 +1,10 @@
+services:
+  jupyter:
+    image: jupyter/pyspark-notebook:latest
+    ports:
+      - 8888:8888
+    command: "start-notebook.sh --NotebookApp.token="
+
+networks:
+  default:
+    name: hadoop-net

@@ -143,7 +143,7 @@ In this project, the objective is to run Spark jobs on top of the Hadoop cluster
 * Deploy a sample Spark job to the Hadoop cluster :
   * Put PySpark applications under `cluster/spark-apps` folder. A volume is configured, applications will be places under `~/work-dir/apps` in the client container.
   * Deploy the sample Spark application on top of the Hadoop cluster
-    * `docker exec -it cluster-spark-1 spark-submit --master yarn --deploy-mode client apps/app.py`
+    * `docker compose -f compose.spark.yml run spark spark-submit --master yarn --deploy-mode client apps/app.py`
     * This application simply reads a CSV file from HDFS, then it shows results.
     * Check job details in SPARK UI : `http://localhost:4040/jobs/`
 

@@ -34,3 +34,7 @@ services:
       - "9865:9864"
     links:
         - namenode:hdfs-namenode
+
+networks:
+  default:
+    name: hadoop-net

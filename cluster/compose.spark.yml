@@ -16,4 +16,7 @@ services:
       - namenode
       - datanode-1
       - datanode-2
-    command: tail -f /dev/null
+
+networks:
+  default:
+    name: hadoop-net
