@@ -21,7 +21,7 @@ results.raise_for_status()
 # Upload the file to HDFS
 current_datetime = datetime.now().strftime("%Y/%m/%d/%H/%M")
 
-HDFS_PATH = f"data_sources/{current_datetime}/rail_data.gz"
+HDFS_PATH = f"data_sources/open_rail_data/{current_datetime}/rail_data.gz"
 
 client = InsecureClient(url=HADOOP_NAMENODE_HOSTNAME)
 with client.write(HDFS_PATH, overwrite=True) as writer:
