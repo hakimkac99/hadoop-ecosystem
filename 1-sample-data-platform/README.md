@@ -10,7 +10,7 @@ Data used in this project is from ['Open Rail Data Wiki'](https://wiki.openraild
 - **Data warehouse** : Apache Hive
 - **ETL** : Apache PySpark
 - **Data Visualization** : Apache Superset
-- **Orchestration** : Apache Airflow
+- **Orchestration** : Prefect
 
 # Data lake management
 
