@@ -126,7 +126,7 @@ class APIExtractionToHDFS:
     @flow(name="API extraction")
     def run(self):
         """
-        This method runs the extraction process
+        This method runs the API extraction and loading process
         """
         content = self.extract()
         self.load(content)
