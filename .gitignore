@@ -1,2 +1,3 @@
 cluster/hive/metastore-db-data
 cluster/hdfs-data
+**/__pycache__/

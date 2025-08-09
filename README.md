@@ -153,4 +153,4 @@ In this project, the objective is to run Spark jobs on top of the Hadoop cluster
 # TODO
 
 * [configuration] add the ability to update Hadoop cluster default settings (namenode, datanode and YARN) using a local volume.
- 
+* [documentation] document Prefect server/worker creation, deployments, secrets etc.
