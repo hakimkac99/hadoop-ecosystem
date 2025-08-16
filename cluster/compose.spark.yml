@@ -16,6 +16,24 @@ services:
       - namenode
       - datanode-1
       - datanode-2
+  
+  spark-history-server:
+    image: apache/spark-py:latest
+    hostname: historyserver
+    depends_on:
+      - namenode
+    command: >
+      bash -c "/opt/spark/sbin/start-history-server.sh && tail -f /dev/null"
+    ports:
+      - "18080:18080"   # Spark History Server UI
+    environment:
+      HADOOP_CONF_DIR: /opt/hadoop/etc/hadoop
+      SPARK_LOG_DIR: /tmp/spark-logs
+      SPARK_HISTORY_OPTS: "-Dspark.history.fs.logDirectory=hdfs://hdfs-namenode:9000/spark-logs -Dspark.history.ui.bindAddress=0.0.0.0"
+    volumes:
+      - ./hadoop-config:/opt/hadoop/etc/hadoop
+    links:
+      - namenode:hdfs-namenode
 
 networks:
   default:

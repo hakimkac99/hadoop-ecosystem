@@ -141,7 +141,7 @@ In this project, the objective is to run Spark jobs on top of the Hadoop cluster
 * `cluster/compose.spark.yml` has one service with PySpark installed and configured to connect to the Hadoop cluster (YARN & HDFS) by providing the two configuration files `core-site.xml` and `yarn-site.xml`.
 
 * Deploy a sample Spark job to the Hadoop cluster :
-  * Put PySpark applications under `cluster/spark-apps` folder. A volume is configured, applications will be places under `~/work-dir/apps` in the client container.
+  * Put PySpark applications under the `cluster/spark-apps` folder. Applications will be places under `~/work-dir/apps` in the client container because of the configured folder.
   * Deploy the sample Spark application on top of the Hadoop cluster
     * `docker compose -f compose.spark.yml run spark spark-submit --master yarn --deploy-mode client apps/app.py`
     * This application simply reads a CSV file from HDFS, then it shows results.
@@ -154,3 +154,8 @@ In this project, the objective is to run Spark jobs on top of the Hadoop cluster
 
 * [configuration] add the ability to update Hadoop cluster default settings (namenode, datanode and YARN) using a local volume.
 * [documentation] document Prefect server/worker creation, deployments, secrets etc.
+* [documentation] document Spark history server
+* [configuration] create /spark-logs in HDFS automatically for Spark history server logs
+* [documentation] document PySpark packaging process
+* [documentation] document Yarn cluster mode, client mode when submitting Spark jobs
+* [configuration] performance parameters : number of workers, used memory, CPUs etc.

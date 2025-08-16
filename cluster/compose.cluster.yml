@@ -20,6 +20,7 @@ services:
       bash -c "hdfs datanode & yarn nodemanager"
     ports:
       - "9864:9864"
+      - "8042:8042"
     links:
         - namenode:hdfs-namenode
 
@@ -32,6 +33,7 @@ services:
       bash -c "hdfs datanode & yarn nodemanager "
     ports:
       - "9865:9864"
+      - "8043:8042"
     links:
         - namenode:hdfs-namenode
 
