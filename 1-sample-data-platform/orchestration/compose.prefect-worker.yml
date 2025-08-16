@@ -1,14 +1,20 @@
 services:
   prefect-worker:
-    image: prefecthq/prefect:3-latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - ./prefect_flows:/opt/prefect/prefect_flows
+      - ../transformation.zip:/opt/prefect/spark_apps/transformation.zip
+      - ../transformation:/opt/prefect/spark_apps/transformation
+      - ../transformation/hadoop-config:/opt/hadoop/etc/hadoop
       - ./requirements.txt:/opt/prefect/requirements.txt
     environment:
       PREFECT_API_URL: http://prefect-server:4200/api
-    command: >
-      bash -c "pip install -r requirements.txt 
-      && prefect worker start --pool local-pool"
+      HADOOP_CONF_DIR: /opt/hadoop/etc/hadoop
+      PATH: /opt/spark/bin:$PATH
+      PYSPARK_PYTHON: python3
+    command: prefect worker start --pool local-pool
   
   prefect-client:
       image: prefecthq/prefect:3-latest
