@@ -33,7 +33,7 @@ def ingest_schedules():
             ),
         ),
         hadoop_namenode_hostname="http://hdfs-namenode:9870",
-        destination_hdfs_path=f"data_sources/open_rail_data/{current_datetime}/rail_data.gz",
+        destination_hdfs_path=f"landing/open_rail_data/{current_datetime}/rail_data.gz",
     )
 
     schedules_api_extraction_to_hdfs.run()

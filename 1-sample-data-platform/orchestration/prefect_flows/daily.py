@@ -16,4 +16,4 @@ def run_daily():
     PySparkJob(
         deploy_mode=DeployMode.CLUSTER,
         py_files=["transformation.zip", "transformation/main.py"],
-    ).submit()
+    ).submit.with_options(name="Submit transformation PySpark job")()

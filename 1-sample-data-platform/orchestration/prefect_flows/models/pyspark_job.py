@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List
 
+from prefect import task
 from prefect_shell import ShellOperation
 
 
@@ -28,6 +29,7 @@ class PySparkJob:
         self.py_files = py_files
         self.working_dir = working_dir
 
+    @task
     def submit(self):
         with ShellOperation(
             commands=[
