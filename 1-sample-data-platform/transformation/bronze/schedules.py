@@ -23,7 +23,7 @@ class SchedulesBronzePipeline(ETLPipeline):
         hdfs_base_url = "hdfs://hdfs-namenode:9000/user/root"
         today = (date.today()).strftime("%Y/%m/%d")
         df: DataFrame = self.spark.read.json(
-            f"{hdfs_base_url}/landing/open_rail_data/{today}/*/rail_data.gz"
+            f"{hdfs_base_url}/landing/open_rail_data/{today}/*/*/rail_data.gz"
         )
 
         return df

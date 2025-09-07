@@ -112,7 +112,7 @@ class APIExtractionToHDFS:
         This method creates a file in HDFS
         """
         self.logger.info(
-            "Starting uploading file to HDFS '%s' ...", self.destination_hdfs_path
+            "Start uploading file to HDFS '%s' ...", self.destination_hdfs_path
         )
 
         client = InsecureClient(url=self.hadoop_namenode_hostname)

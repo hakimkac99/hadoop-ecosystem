@@ -159,3 +159,4 @@ In this project, the objective is to run Spark jobs on top of the Hadoop cluster
 * [documentation] document PySpark packaging process
 * [documentation] document Yarn cluster mode, client mode when submitting Spark jobs
 * [configuration] performance parameters : number of workers, used memory, CPUs etc.
+* [development] include python packages to the PySpark package (zip)

@@ -5,9 +5,10 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./prefect_flows:/opt/prefect/prefect_flows
+      - ../ingestion/:/opt/prefect/ingestion
       - ../transformation.zip:/opt/prefect/spark_apps/transformation.zip
       - ../transformation:/opt/prefect/spark_apps/transformation
-      - ../hadoop-config:/opt/hadoop/etc/hadoop
+      - ./hadoop-config:/opt/hadoop/etc/hadoop
       - ./requirements.txt:/opt/prefect/requirements.txt
     environment:
       PREFECT_API_URL: http://prefect-server:4200/api
