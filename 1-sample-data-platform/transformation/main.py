@@ -1,9 +1,9 @@
-from bronze.schedules import SchedulesBronzePipeline
+from bronze.schedules import SchedulesBronzeTable
 from pyspark.sql import SparkSession
 
 
 def run_spark_transformations(spark: SparkSession):
-    pipeline = SchedulesBronzePipeline(spark=spark)
+    pipeline = SchedulesBronzeTable(spark=spark)
     pipeline.run()
 
 

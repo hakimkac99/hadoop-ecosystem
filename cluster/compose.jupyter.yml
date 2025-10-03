@@ -1,8 +1,10 @@
 services:
   jupyter:
-    image: jupyter/pyspark-notebook:latest
+    image: quay.io/jupyter/pyspark-notebook:spark-4.0.1
     ports:
       - 8888:8888
+    volumes:
+      - ./jupyter_data:/home/jovyan/jupyter_data
     command: "start-notebook.sh --NotebookApp.token="
 
 networks:
