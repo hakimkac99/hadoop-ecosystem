@@ -2,7 +2,7 @@ include:
   - compose.cluster.yml
 services:  
   spark:
-    image: apache/spark-py:latest
+    image: apache/spark:4.0.0-python3
     environment:
       - HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
       - PATH=/opt/spark/bin:$PATH
@@ -18,7 +18,7 @@ services:
       - datanode-2
   
   spark-history-server:
-    image: apache/spark-py:latest
+    image: apache/spark:4.0.0-python3
     hostname: historyserver
     depends_on:
       - namenode

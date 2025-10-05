@@ -1,6 +1,6 @@
 # an image having both PySpark setup (including java) and Prefect.
 
-FROM apache/spark-py:latest
+FROM apache/spark:4.0.0-python3
 
 USER root
 
