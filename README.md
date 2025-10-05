@@ -38,9 +38,13 @@ Note that only basic Hadoop components are part of this project.
 
  ![alt text](doc/hadoop-cluster-archi.png?)
 
-The docker image used for the Hadoop cluster is built locally from the Dockerfile available in this repository : https://github.com/bigdatafoundation/docker-hadoop/blob/master/3.3.6/Dockerfile
+Hadoop version : 3.4.2
+Java version : 17
 
-This image installs Java 8, Hadoop 3.3.6 and YARN.
+The Hadoop image is built from `cluster/Dockerfile.hadoop` file : `cd cluster && docker build -f Dockerfile.hadoop -t hadoop:3.4.2-java17 .`
+
+Inspired by https://github.com/bigdatafoundation/docker-hadoop/blob/master/3.3.6/Dockerfile
+
 
 #### 1.1. Namenode
 

@@ -1,17 +1,17 @@
 services:
   namenode:
-    image: hadoop:latest
+    image: hadoop:3.4.2-java17    
+    hostname: hdfs-namenode
     ports: 
         - "9870:9870"
         - "8088:8088"
     command: > 
       bash -c "hdfs namenode & yarn resourcemanager"
-    hostname: hdfs-namenode
     volumes:
-     - ./hdfs-data:/data/dfs/data/
+     - ./namenode-data:/data/dfs/data/
 
   datanode-1:
-    image: hadoop:latest
+    image: hadoop:3.4.2-java17
     hostname: datanode1
     depends_on: 
         - namenode
@@ -24,7 +24,7 @@ services:
         - namenode:hdfs-namenode
 
   datanode-2:
-    image: hadoop:latest
+    image: hadoop:3.4.2-java17
     hostname: datanode2
     depends_on: 
         - namenode
@@ -35,6 +35,7 @@ services:
       - "8043:8042"
     links:
         - namenode:hdfs-namenode
+
 
 networks:
   default:
