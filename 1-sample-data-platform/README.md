@@ -17,8 +17,8 @@ Data used in this project is from ['Open Rail Data Wiki'](https://wiki.openraild
 For this sample data platform, an ETL (Extract, Transform, Load) approach is used. 
 
 To achieve this :
-1. Data is first loaded from data sources to a landing zone that we call "Bronze layer". No transformation in this stage, only adding some metadata like the ingestion date time.
-2. Data is then deduplicated, cleaned and transformed in a staging zone that we call "Silver layer".
+1. Data is first loaded from data sources to a landing zone (Bronze layer). No transformation in this stage, only adding some metadata like the ingestion date time.
+2. Data is then deduplicated, cleaned and transformed in a staging zone (Silver layer).
 3. Finally, data is structured in "Gold layer" for Analytics and for answering Business questions.
 
 Notes : 
@@ -27,4 +27,4 @@ Notes :
 
 # Data warehouse
 
-Data from the Gold layer is loaded to Hive.
+Data from the Gold layer is exposed to Hive.

@@ -12,7 +12,7 @@ class TrainStatusBronzeTable(ETLTable):
             partition_columns=["spark_job_creation_timestamp"],
         )
 
-    def extract_upstream(self) -> DataFrame:
+    def extract_upstream(self, run_upstream: bool) -> DataFrame:
         self.logger.info("Start extracting train status from HDFS csv static file ...")
 
         # Extracting data from HDFS
