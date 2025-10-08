@@ -3,7 +3,8 @@ from datetime import date
 from bronze.train_status import TrainStatusBronzeTable
 from helpers.scd1 import scd1_merge
 from models.etl_table import ETLTable
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import DataFrame, SparkSession, Window
+from pyspark.sql.functions import col, row_number
 
 
 class TrainStatusSilverTable(ETLTable):
@@ -30,7 +31,14 @@ class TrainStatusSilverTable(ETLTable):
 
     def transform(self, upstream_dataframe: DataFrame) -> DataFrame:
         # deduplicate bronze table
-        deduplicated_bronze_table_df = upstream_dataframe.dropDuplicates(["code"])
+        dedup_window = Window.orderBy(
+            col("spark_job_creation_timestamp").desc()
+        ).partitionBy("code")
+        deduplicated_bronze_table_df = (
+            upstream_dataframe.withColumn("row_number", row_number().over(dedup_window))
+            .filter(col("row_number") == 1)
+            .drop(col("row_number"))
+        )
 
         existing_silver_table_df = self.read()
 
@@ -41,5 +49,6 @@ class TrainStatusSilverTable(ETLTable):
                 df_target=existing_silver_table_df,
                 primary_keys=["code"],
             )
+
             return scd1_result
         return deduplicated_bronze_table_df
