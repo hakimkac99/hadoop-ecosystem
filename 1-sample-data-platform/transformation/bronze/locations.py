@@ -7,18 +7,18 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import col, current_timestamp
 
 
-class SchedulesBronzeTable(ETLTable):
+class LocationsBronzeTable(ETLTable):
     def __init__(self, spark: SparkSession, hdfs: HDFSClient):
         super().__init__(
             spark=spark,
             hdfs=hdfs,
-            name="schedule",
-            storage_path="bronze/open_rail_data/schedule",
+            name="location",
+            storage_path="bronze/open_rail_data/location",
             partition_columns=["spark_job_creation_timestamp"],
         )
 
     def extract_upstream(self, run_upstream: bool) -> DataFrame | None:
-        self.logger.info("Start extracting schedules from HDFS ...")
+        self.logger.info("Start extracting locations from HDFS ...")
 
         # Extracting data from HDFS
         hdfs_base_url = "hdfs://hdfs-namenode:9000/user/root"
@@ -39,10 +39,10 @@ class SchedulesBronzeTable(ETLTable):
             return None
 
     def transform(self, upstream_dataframe) -> DataFrame:
-        schedules_table_df: DataFrame = (
-            upstream_dataframe.filter(col("JsonScheduleV1").isNotNull())
-            .select(col("JsonScheduleV1.*"))
+        locations_table_df: DataFrame = (
+            upstream_dataframe.filter(col("TiplocV1").isNotNull())
+            .select(col("TiplocV1.*"))
             .withColumn("spark_job_creation_timestamp", current_timestamp())
         )
 
-        return schedules_table_df
+        return locations_table_df

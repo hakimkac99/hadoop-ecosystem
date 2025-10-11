@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from functools import reduce
 from typing import Dict, List, Optional
 
-from helpers.hdfs import hdfs_replace_file
+from helpers.hdfs import HDFSClient
 
 # from pyspark.logger import PySparkLogger
 from pyspark.errors.exceptions.captured import AnalysisException
@@ -14,16 +14,20 @@ class ETLTable(ABC):
     def __init__(
         self,
         spark: SparkSession,
+        hdfs: HDFSClient,
         name: str,
         storage_path: str,
         partition_columns: Optional[List[str]] = None,
         table_write_mode: str = "append",
+        primary_keys: Optional[List[str]] = None,
     ):
         self.spark = spark
+        self.hdfs = hdfs
         self.name = name
         self.storage_path = storage_path
         self.partition_columns = partition_columns
         self.table_write_mode = table_write_mode
+        self.primary_keys = primary_keys
 
     @property
     def logger(self):
@@ -33,7 +37,7 @@ class ETLTable(ABC):
         # return PySparkLogger.getLogger(name="ConsoleLogger")
 
     @abstractmethod
-    def extract_upstream(self, run_upstream: bool):
+    def extract_upstream(self, run_upstream: bool) -> DataFrame | None:
         pass
 
     @abstractmethod
@@ -63,8 +67,7 @@ class ETLTable(ABC):
                 mode="overwrite",
             )
 
-            hdfs_replace_file(
-                spark=self.spark,
+            self.hdfs.replace_file(
                 source_file_path=temp_path,
                 destination_file_path=destination_path,
             )
@@ -99,7 +102,11 @@ class ETLTable(ABC):
 
     def run_etl(self, run_upstream: bool = False):
         self.logger.info(f"Starting the ETL Pipeline : {self.name}")
-        transformed_data = self.transform(
-            self.extract_upstream(run_upstream=run_upstream)
-        )
-        self.load(transformed_data)
+
+        extracted_data_df = self.extract_upstream(run_upstream=run_upstream)
+
+        if extracted_data_df:
+            transformed_data = self.transform(extracted_data_df)
+            self.load(transformed_data)
+        else:
+            self.logger.warn(f"No data to load for '{self.storage_path}'")

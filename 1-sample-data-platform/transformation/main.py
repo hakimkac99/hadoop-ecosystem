@@ -1,12 +1,16 @@
 # from bronze.schedules import SchedulesBronzeTable
+from helpers.hdfs import HDFSClient
 from pyspark.sql import SparkSession
-from silver.train_status import TrainStatusSilverTable
+from silver.dim_location import DimLocationSilverTable
+from silver.dim_train_status import DimTrainStatusSilverTable
 
 
-def run_spark_transformations(spark: SparkSession):
-    # schedules_table = SchedulesBronzeTable(spark=spark)
-    train_status_table = TrainStatusSilverTable(spark=spark)
+def run_spark_transformations(spark: SparkSession, hdfs: HDFSClient):
+    train_status_table = DimTrainStatusSilverTable(spark=spark, hdfs=hdfs)
     train_status_table.run_etl(run_upstream=True)
+
+    dim_location = DimLocationSilverTable(spark=spark, hdfs=hdfs)
+    dim_location.run_etl(run_upstream=True)
 
 
 if __name__ == "__main__":
@@ -17,4 +21,6 @@ if __name__ == "__main__":
         .config("spark.eventLog.dir", "hdfs://hdfs-namenode:9000/spark-logs")
         .getOrCreate()
     )
-    run_spark_transformations(spark)
+
+    hdfs = HDFSClient(spark=spark)
+    run_spark_transformations(spark, hdfs)

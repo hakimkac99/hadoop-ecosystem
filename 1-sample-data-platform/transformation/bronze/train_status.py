@@ -1,12 +1,14 @@
+from helpers.hdfs import HDFSClient
 from models.etl_table import ETLTable
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import current_timestamp
 
 
 class TrainStatusBronzeTable(ETLTable):
-    def __init__(self, spark: SparkSession):
+    def __init__(self, spark: SparkSession, hdfs: HDFSClient):
         super().__init__(
             spark=spark,
+            hdfs=hdfs,
             name="train_status",
             storage_path="bronze/open_rail_data/train_status",
             partition_columns=["spark_job_creation_timestamp"],
