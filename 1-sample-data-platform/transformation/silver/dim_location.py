@@ -37,6 +37,7 @@ class DimLocationSilverTable(ETLTable):
         dedup_window = Window.orderBy(
             col("spark_job_creation_timestamp").desc()
         ).partitionBy(*self.primary_keys)
+
         deduplicated_bronze_table_df = (
             upstream_dataframe.withColumn("row_number", row_number().over(dedup_window))
             .filter(col("row_number") == 1)
@@ -45,13 +46,11 @@ class DimLocationSilverTable(ETLTable):
 
         existing_silver_table_df = self.read()
 
-        if existing_silver_table_df:
-            # apply scd1
-            scd1_result = scd1_merge(
-                df_source=deduplicated_bronze_table_df,
-                df_target=existing_silver_table_df,
-                primary_keys=self.primary_keys,
-            )
+        # apply scd1
+        scd1_result = scd1_merge(
+            df_source=deduplicated_bronze_table_df,
+            df_target=existing_silver_table_df,
+            primary_keys=self.primary_keys,
+        )
 
-            return scd1_result
-        return deduplicated_bronze_table_df
+        return scd1_result

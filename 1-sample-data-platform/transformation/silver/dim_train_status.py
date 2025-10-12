@@ -16,6 +16,7 @@ class DimTrainStatusSilverTable(ETLTable):
             name="dim_train_status",
             storage_path="silver/open_rail_data/dim_train_status",
             partition_columns=["spark_job_creation_timestamp"],
+            primary_keys=["code"],
             table_write_mode="overwrite",
         )
 
@@ -46,13 +47,11 @@ class DimTrainStatusSilverTable(ETLTable):
 
         existing_silver_table_df = self.read()
 
-        if existing_silver_table_df:
-            # apply scd1
-            scd1_result = scd1_merge(
-                df_source=deduplicated_bronze_table_df,
-                df_target=existing_silver_table_df,
-                primary_keys=["code"],
-            )
+        # apply scd1
+        scd1_result = scd1_merge(
+            df_source=deduplicated_bronze_table_df,
+            df_target=existing_silver_table_df,
+            primary_keys=self.primary_keys,
+        )
 
-            return scd1_result
-        return deduplicated_bronze_table_df
+        return scd1_result
