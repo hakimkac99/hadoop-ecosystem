@@ -1,4 +1,5 @@
-from datetime import date
+from datetime import Dict, date
+from typing import Optional
 
 from bronze.train_status import TrainStatusBronzeTable
 from helpers.hdfs import HDFSClient
@@ -20,7 +21,7 @@ class DimTrainStatusSilverTable(ETLTable):
             table_write_mode="overwrite",
         )
 
-    def extract_upstream(self, run_upstream: bool) -> DataFrame:
+    def extract_upstream(self, run_upstream: bool) -> Optional[Dict[str, DataFrame]]:
         train_status_bronze_etl = TrainStatusBronzeTable(
             spark=self.spark, hdfs=self.hdfs
         )
@@ -32,15 +33,17 @@ class DimTrainStatusSilverTable(ETLTable):
         bronze_df = train_status_bronze_etl.read(
             partition_values={"spark_job_creation_timestamp": f"{today}%"}
         )
-        return bronze_df
+        return {"bronze_train_status": bronze_df}
 
-    def transform(self, upstream_dataframe: DataFrame) -> DataFrame:
+    def transform(self, upstream_dataframes: Dict[str, DataFrame]) -> DataFrame:
         # deduplicate bronze table
         dedup_window = Window.orderBy(
             col("spark_job_creation_timestamp").desc()
-        ).partitionBy("code")
+        ).partitionBy(*self.primary_keys)
+
         deduplicated_bronze_table_df = (
-            upstream_dataframe.withColumn("row_number", row_number().over(dedup_window))
+            upstream_dataframes["bronze_train_status"]
+            .withColumn("row_number", row_number().over(dedup_window))
             .filter(col("row_number") == 1)
             .drop(col("row_number"))
         )

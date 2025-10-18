@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Dict, Optional
 
 from helpers.hdfs import HDFSClient
 from models.etl_table import ETLTable
@@ -17,7 +18,7 @@ class SchedulesBronzeTable(ETLTable):
             partition_columns=["spark_job_creation_timestamp"],
         )
 
-    def extract_upstream(self, run_upstream: bool) -> DataFrame | None:
+    def extract_upstream(self, run_upstream: bool) -> Optional[Dict[str, DataFrame]]:
         self.logger.info("Start extracting schedules from HDFS ...")
 
         # Extracting data from HDFS
@@ -33,14 +34,18 @@ class SchedulesBronzeTable(ETLTable):
                 .json(f"{hdfs_base_url}/landing/open_rail_data/{today}")
             )
 
-            return df
+            return {
+                "schedules": df,
+            }
+
         except AnalysisException as e:
             self.logger.warn(f"'{file_name}' file failed to read : {e.getMessage()}")
             return None
 
-    def transform(self, upstream_dataframe) -> DataFrame:
+    def transform(self, upstream_dataframes) -> DataFrame:
         schedules_table_df: DataFrame = (
-            upstream_dataframe.filter(col("JsonScheduleV1").isNotNull())
+            upstream_dataframes["schedules"]
+            .filter(col("JsonScheduleV1").isNotNull())
             .select(col("JsonScheduleV1.*"))
             .withColumn("spark_job_creation_timestamp", current_timestamp())
         )

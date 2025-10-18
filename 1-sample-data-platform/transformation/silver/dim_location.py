@@ -1,4 +1,5 @@
-from datetime import date
+from datetime import Dict, date
+from typing import Optional
 
 from bronze.locations import LocationsBronzeTable
 from helpers.hdfs import HDFSClient
@@ -20,7 +21,7 @@ class DimLocationSilverTable(ETLTable):
             table_write_mode="overwrite",
         )
 
-    def extract_upstream(self, run_upstream: bool) -> DataFrame:
+    def extract_upstream(self, run_upstream: bool) -> Optional[Dict[str, DataFrame]]:
         locations_bronze_etl = LocationsBronzeTable(spark=self.spark, hdfs=self.hdfs)
         if run_upstream:
             locations_bronze_etl.run_etl()
@@ -30,16 +31,17 @@ class DimLocationSilverTable(ETLTable):
         bronze_df = locations_bronze_etl.read(
             partition_values={"spark_job_creation_timestamp": f"{today}%"}
         )
-        return bronze_df
+        return {"bronze_location": bronze_df}
 
-    def transform(self, upstream_dataframe: DataFrame) -> DataFrame:
+    def transform(self, upstream_dataframes: Dict[str, DataFrame]) -> DataFrame:
         # deduplicate bronze table
         dedup_window = Window.orderBy(
             col("spark_job_creation_timestamp").desc()
         ).partitionBy(*self.primary_keys)
 
         deduplicated_bronze_table_df = (
-            upstream_dataframe.withColumn("row_number", row_number().over(dedup_window))
+            upstream_dataframes["bronze_location"]
+            .withColumn("row_number", row_number().over(dedup_window))
             .filter(col("row_number") == 1)
             .drop(col("row_number"))
         )

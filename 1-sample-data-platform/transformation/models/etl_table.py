@@ -37,11 +37,11 @@ class ETLTable(ABC):
         # return PySparkLogger.getLogger(name="ConsoleLogger")
 
     @abstractmethod
-    def extract_upstream(self, run_upstream: bool) -> DataFrame | None:
+    def extract_upstream(self, run_upstream: bool) -> Optional[Dict[str, DataFrame]]:
         pass
 
     @abstractmethod
-    def transform(self, upstream_dataframe: DataFrame):
+    def transform(self, upstream_dataframes: Dict[str, DataFrame]):
         pass
 
     def load(self, table_data: DataFrame):
@@ -103,10 +103,10 @@ class ETLTable(ABC):
     def run_etl(self, run_upstream: bool = False):
         self.logger.info(f"Starting the ETL Pipeline : {self.name}")
 
-        extracted_data_df = self.extract_upstream(run_upstream=run_upstream)
+        upstream_dataframes = self.extract_upstream(run_upstream=run_upstream)
 
-        if extracted_data_df:
-            transformed_data = self.transform(extracted_data_df)
+        if upstream_dataframes:
+            transformed_data = self.transform(upstream_dataframes)
             self.load(transformed_data)
         else:
             self.logger.warn(f"No data to load for '{self.storage_path}'")
