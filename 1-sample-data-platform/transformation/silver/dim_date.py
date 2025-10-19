@@ -19,6 +19,7 @@ class DimDateSilverTable(ETLTable):
             partition_columns=["spark_job_creation_timestamp"],
             primary_keys=["date"],
             table_write_mode="overwrite",
+            create_table_in_hive=True,
         )
 
     def extract_upstream(self, run_upstream: bool) -> Optional[Dict[str, DataFrame]]:

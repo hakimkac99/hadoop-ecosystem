@@ -9,7 +9,7 @@ Table of contents
       - [1.3. HDFS (Hadoop Distributed file system)](#13-hdfs-hadoop-distributed-file-system)
       - [1.4. YARN (Yet another resource negotiator)](#14-yarn-yet-another-resource-negotiator)
     - [2. Apache Hive](#2-apache-hive)
-    - [2. Apache Spark](#2-apache-spark)
+    - [3. Apache Spark](#3-apache-spark)
 - [TODO](#todo)
 
 
@@ -135,7 +135,7 @@ Hive provides HiveQL as a SQL-like query tool. It executes MapReduce jobs behind
     ![alt text](doc/hive-hdfs-interaction.png)
 
 
-### 2. Apache Spark
+### 3. Apache Spark
 
 Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.
 (https://spark.apache.org/)

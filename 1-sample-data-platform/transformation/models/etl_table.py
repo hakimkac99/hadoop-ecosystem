@@ -20,6 +20,7 @@ class ETLTable(ABC):
         partition_columns: Optional[List[str]] = None,
         table_write_mode: str = "append",
         primary_keys: Optional[List[str]] = None,
+        create_table_in_hive: Optional[bool] = False,
     ):
         self.spark = spark
         self.hdfs = hdfs
@@ -28,6 +29,7 @@ class ETLTable(ABC):
         self.partition_columns = partition_columns
         self.table_write_mode = table_write_mode
         self.primary_keys = primary_keys
+        self.create_table_in_hive = create_table_in_hive
 
     @property
     def logger(self):
@@ -49,28 +51,39 @@ class ETLTable(ABC):
 
         destination_path = f"hdfs://hdfs-namenode:9000/user/root/{self.storage_path}"
 
-        if self.table_write_mode == "append":
-            table_data.write.parquet(
-                path=destination_path,
+        if self.create_table_in_hive:
+            self.logger.info(f"Creating Hive table {self.name} ...")
+            table_data.write.saveAsTable(
+                name=f"data_warehouse.{self.name}",
+                path=f"{destination_path}_tmp"
+                if self.table_write_mode == "overwrite"
+                else destination_path,
                 partitionBy=self.partition_columns,
-                mode="append",
+                mode=self.table_write_mode,
+            )
+            self.logger.info(f"Hive table {self.name} created successfully.")
+        else:
+            table_data.write.parquet(
+                path=f"{destination_path}_tmp"
+                if self.table_write_mode == "overwrite"
+                else destination_path,
+                partitionBy=self.partition_columns,
+                mode=self.table_write_mode,
             )
 
-        elif self.table_write_mode == "overwrite":
+        if self.table_write_mode == "overwrite":
             # write to a temporary file then to the final destination to avoid FileNotFoundException when applying scd1
 
-            # write to a temporary location
-            temp_path = f"{destination_path}_tmp"
-            table_data.write.parquet(
-                path=temp_path,
-                partitionBy=self.partition_columns,
-                mode="overwrite",
-            )
-
             self.hdfs.replace_file(
-                source_file_path=temp_path,
+                source_file_path=f"{destination_path}_tmp",
                 destination_file_path=destination_path,
             )
+
+            if self.create_table_in_hive:
+                # Update Hive table location from tmp to final path
+                self.spark.sql(
+                    f"ALTER TABLE {self.name} SET LOCATION '{destination_path}'"
+                )
 
     def read(self, partition_values: Optional[Dict[str, str]] = None):
         self.logger.info(

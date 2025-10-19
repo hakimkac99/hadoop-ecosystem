@@ -19,6 +19,7 @@ class FactScheduledStopsSilverTable(ETLTable):
             storage_path="silver/open_rail_data/fact_scheduled_stops",
             partition_columns=["schedule_date"],
             table_write_mode="overwrite",
+            create_table_in_hive=True,
         )
 
     def extract_upstream(self, run_upstream: bool) -> Optional[Dict[str, DataFrame]]:
@@ -104,9 +105,8 @@ class FactScheduledStopsSilverTable(ETLTable):
 
         # Join with dim_date, dim_train_status and dim_location
         fact_scheduled_stops = (
-            schedule_stops.join(
-                dim_date, daily_schedule.schedule_date == dim_date.date, how="inner"
-            )
+            schedule_stops.repartition(200, "schedule_date")
+            .join(dim_date, daily_schedule.schedule_date == dim_date.date, how="inner")
             .join(dim_location, on="tiploc_code", how="inner")
             .join(
                 dim_train_status,

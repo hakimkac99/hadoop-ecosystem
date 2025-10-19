@@ -34,7 +34,7 @@ class PySparkJob:
         with ShellOperation(
             commands=[
                 (
-                    "spark-submit --master yarn "
+                    "spark-submit --jars /opt/spark/jars/postgresql-42.7.8.jar --master yarn "
                     f"--deploy-mode {self.deploy_mode.value} --py-files {' '.join(self.py_files)}"
                 ),
             ],

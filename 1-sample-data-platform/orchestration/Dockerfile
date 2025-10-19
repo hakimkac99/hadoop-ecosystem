@@ -13,3 +13,6 @@ COPY requirements.txt /opt/prefect/requirements.txt
 
 # Install additional Python dependencies
 RUN pip install --no-cache-dir -r /opt/prefect/requirements.txt
+
+# postgresql jdbc driver for the HIVE metastore connection
+COPY drivers /opt/spark/jars/

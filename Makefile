@@ -8,4 +8,7 @@ run-spark-history-server:
 	docker compose -f cluster/compose.spark.yml up spark-history-server -d
 
 setup-jupyter-server:
-	docker compose -f cluster/compose.jupyter.yml up -d
+	docker compose -f cluster/compose.jupyter.yml up -d --build
+
+setup-hive-server:
+	docker compose -f cluster/compose.hive.yml up -d
