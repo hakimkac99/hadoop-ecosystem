@@ -1,5 +1,5 @@
-from datetime import Dict, date
-from typing import Optional
+from datetime import date
+from typing import Dict, Optional
 
 from bronze.locations import LocationsBronzeTable
 from helpers.hdfs import HDFSClient

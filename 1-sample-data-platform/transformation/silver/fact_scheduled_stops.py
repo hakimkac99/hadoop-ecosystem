@@ -35,10 +35,10 @@ class FactScheduledStopsSilverTable(ETLTable):
         )
 
         if run_upstream:
-            schedule_bronze_etl.run_etl()
-            dim_date_silver_etl.run_etl()
-            dim_train_status_silver_etl.run_etl()
-            dim_location_silver_etl.run_etl()
+            schedule_bronze_etl.run_etl(run_upstream=run_upstream)
+            dim_date_silver_etl.run_etl(run_upstream=run_upstream)
+            dim_train_status_silver_etl.run_etl(run_upstream=run_upstream)
+            dim_location_silver_etl.run_etl(run_upstream=run_upstream)
 
         # Extracting data from HDFS
         return {
