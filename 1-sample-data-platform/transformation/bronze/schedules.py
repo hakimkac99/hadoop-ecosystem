@@ -5,7 +5,7 @@ from helpers.hdfs import HDFSClient
 from models.etl_table import ETLTable
 from pyspark.errors.exceptions.captured import AnalysisException
 from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql.functions import col, current_timestamp
+from pyspark.sql.functions import col, current_date
 
 
 class SchedulesBronzeTable(ETLTable):
@@ -15,7 +15,7 @@ class SchedulesBronzeTable(ETLTable):
             hdfs=hdfs,
             name="schedule",
             storage_path="bronze/open_rail_data/schedule",
-            partition_columns=["spark_job_creation_timestamp"],
+            partition_columns=["spark_job_creation_date"],
         )
 
     def extract_upstream(self, run_upstream: bool) -> Optional[Dict[str, DataFrame]]:
@@ -47,7 +47,7 @@ class SchedulesBronzeTable(ETLTable):
             upstream_dataframes["schedules"]
             .filter(col("JsonScheduleV1").isNotNull())
             .select(col("JsonScheduleV1.*"))
-            .withColumn("spark_job_creation_timestamp", current_timestamp())
+            .withColumn("spark_job_creation_date", current_date())
         )
 
         return schedules_table_df

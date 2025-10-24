@@ -5,7 +5,7 @@ from helpers.hdfs import HDFSClient
 from models.etl_table import ETLTable
 from pyspark.errors.exceptions.captured import AnalysisException
 from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql.functions import col, current_timestamp
+from pyspark.sql.functions import col, current_date
 
 
 class LocationsBronzeTable(ETLTable):
@@ -15,7 +15,7 @@ class LocationsBronzeTable(ETLTable):
             hdfs=hdfs,
             name="location",
             storage_path="bronze/open_rail_data/location",
-            partition_columns=["spark_job_creation_timestamp"],
+            partition_columns=["spark_job_creation_date"],
         )
 
     def extract_upstream(self, run_upstream: bool) -> Optional[Dict[str, DataFrame]]:
@@ -46,7 +46,7 @@ class LocationsBronzeTable(ETLTable):
             upstream_dataframes["locations"]
             .filter(col("TiplocV1").isNotNull())
             .select(col("TiplocV1.*"))
-            .withColumn("spark_job_creation_timestamp", current_timestamp())
+            .withColumn("spark_job_creation_date", current_date())
         )
 
         return locations_table_df

@@ -3,7 +3,7 @@ from typing import Dict, Optional
 from helpers.hdfs import HDFSClient
 from models.etl_table import ETLTable
 from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql.functions import current_timestamp
+from pyspark.sql.functions import current_date
 
 
 class DateBronzeTable(ETLTable):
@@ -13,7 +13,7 @@ class DateBronzeTable(ETLTable):
             hdfs=hdfs,
             name="date",
             storage_path="bronze/open_rail_data/date",
-            partition_columns=["spark_job_creation_timestamp"],
+            partition_columns=["spark_job_creation_date"],
         )
 
     def extract_upstream(self, run_upstream: bool) -> Optional[Dict[str, DataFrame]]:
@@ -33,6 +33,6 @@ class DateBronzeTable(ETLTable):
         dates_df = upstream_dataframes["dates"]
 
         dates_table_df: DataFrame = dates_df.withColumn(
-            "spark_job_creation_timestamp", current_timestamp()
+            "spark_job_creation_date", current_date()
         )
         return dates_table_df

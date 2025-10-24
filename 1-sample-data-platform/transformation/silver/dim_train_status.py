@@ -16,10 +16,10 @@ class DimTrainStatusSilverTable(ETLTable):
             hdfs=hdfs,
             name="dim_train_status",
             storage_path="silver/open_rail_data/dim_train_status",
-            partition_columns=["spark_job_creation_timestamp"],
             primary_keys=["code"],
             table_write_mode="overwrite",
             create_table_in_hive=True,
+            scd_type=1,
         )
 
     def extract_upstream(self, run_upstream: bool) -> Optional[Dict[str, DataFrame]]:
@@ -32,14 +32,14 @@ class DimTrainStatusSilverTable(ETLTable):
         # Extracting data from HDFS
         today = (date.today()).strftime("%Y-%m-%d")
         bronze_df = train_status_bronze_etl.read(
-            partition_values={"spark_job_creation_timestamp": f"{today}%"}
+            partition_values={"spark_job_creation_date": f"{today}%"}
         )
         return {"bronze_train_status": bronze_df}
 
     def transform(self, upstream_dataframes: Dict[str, DataFrame]) -> DataFrame:
         # deduplicate bronze table
         dedup_window = Window.orderBy(
-            col("spark_job_creation_timestamp").desc()
+            col("spark_job_creation_date").desc()
         ).partitionBy(*self.primary_keys)
 
         deduplicated_bronze_table_df = (
@@ -49,7 +49,7 @@ class DimTrainStatusSilverTable(ETLTable):
             .drop(col("row_number"))
         )
 
-        existing_silver_table_df = self.read()
+        existing_silver_table_df = self.read(read_scd1_copy=True)
 
         # apply scd1
         scd1_result = scd1_merge(

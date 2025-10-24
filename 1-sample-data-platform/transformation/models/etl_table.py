@@ -21,6 +21,7 @@ class ETLTable(ABC):
         table_write_mode: str = "append",
         primary_keys: Optional[List[str]] = None,
         create_table_in_hive: Optional[bool] = False,
+        scd_type: Optional[int] = None,
     ):
         self.spark = spark
         self.hdfs = hdfs
@@ -30,6 +31,7 @@ class ETLTable(ABC):
         self.table_write_mode = table_write_mode
         self.primary_keys = primary_keys
         self.create_table_in_hive = create_table_in_hive
+        self.scd_type = scd_type
 
     @property
     def logger(self):
@@ -55,43 +57,50 @@ class ETLTable(ABC):
             self.logger.info(f"Creating Hive table {self.name} ...")
             table_data.write.saveAsTable(
                 name=f"data_warehouse.{self.name}",
-                path=f"{destination_path}_tmp"
-                if self.table_write_mode == "overwrite"
-                else destination_path,
+                path=destination_path,
                 partitionBy=self.partition_columns,
                 mode=self.table_write_mode,
             )
             self.logger.info(f"Hive table {self.name} created successfully.")
         else:
             table_data.write.parquet(
-                path=f"{destination_path}_tmp"
-                if self.table_write_mode == "overwrite"
-                else destination_path,
+                path=destination_path,
                 partitionBy=self.partition_columns,
                 mode=self.table_write_mode,
             )
 
-        if self.table_write_mode == "overwrite":
-            # write to a temporary file then to the final destination to avoid FileNotFoundException when applying scd1
+        if self.table_write_mode == "overwrite" and self.scd_type == 1:
+            # write a copy of the table for SCD1 merges
+            # writing to a temp location first and then replacing to avoid FAILED_READ_FILE.FILE_NOT_EXIST errors
+            # because of the overwriting and reading of the same location simultaneously
 
-            self.hdfs.replace_file(
-                source_file_path=f"{destination_path}_tmp",
-                destination_file_path=destination_path,
+            self.logger.info(
+                f"Writing a copy of {self.storage_path} for SCD1 merges ..."
             )
 
-            if self.create_table_in_hive:
-                # Update Hive table location from tmp to final path
-                self.spark.sql(
-                    f"ALTER TABLE {self.name} SET LOCATION '{destination_path}'"
-                )
+            table_data.write.parquet(
+                path=f"{destination_path}_scd1_copy_tmp",
+                partitionBy=self.partition_columns,
+                mode=self.table_write_mode,
+            )
 
-    def read(self, partition_values: Optional[Dict[str, str]] = None):
+            self.hdfs.replace_file(
+                source_file_path=f"{destination_path}_scd1_copy_tmp",
+                destination_file_path=f"{destination_path}_scd1_copy",
+            )
+
+    def read(
+        self,
+        partition_values: Optional[Dict[str, str]] = None,
+        read_scd1_copy: bool = False,
+    ) -> Optional[DataFrame]:
         self.logger.info(
             f"Start reading {self.storage_path} using these partition values : {partition_values} ..."
         )
+        storage_path = self.storage_path + ("_scd1_copy" if read_scd1_copy else "")
 
         try:
-            df: DataFrame = self.spark.read.parquet(self.storage_path)
+            df: DataFrame = self.spark.read.parquet(storage_path)
         except AnalysisException as e:
             self.logger.warn(e.getMessage())
             return None
