@@ -55,15 +55,16 @@ class ETLTable(ABC):
 
         if self.create_table_in_hive:
             self.logger.info(f"Creating Hive table {self.name} ...")
-            table_data.write.saveAsTable(
+            table_data.write.option("partitionOverwriteMode", "dynamic").saveAsTable(
                 name=f"data_warehouse.{self.name}",
+                format="parquet",
                 path=destination_path,
                 partitionBy=self.partition_columns,
                 mode=self.table_write_mode,
             )
             self.logger.info(f"Hive table {self.name} created successfully.")
         else:
-            table_data.write.parquet(
+            table_data.write.option("partitionOverwriteMode", "dynamic").parquet(
                 path=destination_path,
                 partitionBy=self.partition_columns,
                 mode=self.table_write_mode,
@@ -78,7 +79,7 @@ class ETLTable(ABC):
                 f"Writing a copy of {self.storage_path} for SCD1 merges ..."
             )
 
-            table_data.write.parquet(
+            table_data.write.option("partitionOverwriteMode", "dynamic").parquet(
                 path=f"{destination_path}_scd1_copy_tmp",
                 partitionBy=self.partition_columns,
                 mode=self.table_write_mode,

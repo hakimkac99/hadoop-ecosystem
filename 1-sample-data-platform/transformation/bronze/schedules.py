@@ -15,6 +15,7 @@ class SchedulesBronzeTable(ETLTable):
             hdfs=hdfs,
             name="schedule",
             storage_path="bronze/open_rail_data/schedule",
+            table_write_mode="overwrite",
             partition_columns=["spark_job_creation_date"],
         )
 

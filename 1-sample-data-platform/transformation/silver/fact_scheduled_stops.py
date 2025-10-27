@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Dict, Optional
 
 from bronze.schedules import SchedulesBronzeTable
@@ -42,8 +43,11 @@ class FactScheduledStopsSilverTable(ETLTable):
             dim_location_silver_etl.run_etl(run_upstream=run_upstream)
 
         # Extracting data from HDFS
+        today = (date.today()).strftime("%Y-%m-%d")
         return {
-            "bronze_schedule": schedule_bronze_etl.read(),
+            "bronze_schedule": schedule_bronze_etl.read(
+                partition_values={"spark_job_creation_date": today}
+            ),
             "dim_date": dim_date_silver_etl.read(),
             "dim_train_status": dim_train_status_silver_etl.read(),
             "dim_location": dim_location_silver_etl.read(),
@@ -105,11 +109,14 @@ class FactScheduledStopsSilverTable(ETLTable):
 
         # Join with dim_date, dim_train_status and dim_location
         fact_scheduled_stops = (
-            schedule_stops.repartition(200, "schedule_date")
-            .join(dim_date, daily_schedule.schedule_date == dim_date.date, how="inner")
-            .join(dim_location, on="tiploc_code", how="inner")
+            schedule_stops.join(
+                F.broadcast(dim_date),
+                daily_schedule.schedule_date == dim_date.date,
+                how="inner",
+            )
+            .join(F.broadcast(dim_location), on="tiploc_code", how="inner")
             .join(
-                dim_train_status,
+                F.broadcast(dim_train_status),
                 daily_schedule.train_status == dim_train_status.code,
                 how="inner",
             )
