@@ -16,7 +16,6 @@ class DimLocationSilverTable(ETLTable):
             hdfs=hdfs,
             name="dim_location",
             storage_path="silver/open_rail_data/dim_location",
-            partition_columns=["spark_job_creation_date"],
             primary_keys=["tiploc_code"],
             table_write_mode="overwrite",
             create_table_in_hive=True,
