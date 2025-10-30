@@ -12,3 +12,15 @@ setup-jupyter-server:
 
 setup-hive-server:
 	docker compose -f cluster/compose.hive.yml up -d
+
+setup-metabase:
+	docker compose -f cluster/compose.metabase.yml up -d
+
+stop-metabase:
+	docker compose -f cluster/compose.metabase.yml down
+
+setup-superset:
+	docker compose -f cluster/compose.superset.yml up -d
+
+stop-superset:
+	docker compose -f cluster/compose.superset.yml down

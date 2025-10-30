@@ -33,6 +33,7 @@ services:
   hive-server:
     image: apache/hive:4.0.1
     platform: linux/arm64
+    hostname: hiveserver2
     ports:
       - "10000:10000"
       - "10002:10002"
@@ -43,7 +44,7 @@ services:
       - hive-metastore
     environment:
       - SERVICE_NAME=hiveserver2
-      - SERVICE_OPTS=-Dhive.metastore.uris=thrift://metastore:9083
+      - SERVICE_OPTS=-Dhive.metastore.uris=thrift://metastore:9083 -Dhive.metastore.expression.proxy=org.apache.hadoop.hive.ql.optimizer.ppr.PartitionExpressionForMetastore -Dhive.support.quoted.identifiers=none
       - IS_RESUME=true
 
 networks:

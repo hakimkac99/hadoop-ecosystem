@@ -1,0 +1,31 @@
+services:
+  superset:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: superset
+    ports:
+      - '8080:8088'
+    environment:
+      DATABASE_DB: superset
+      DATABASE_HOST: superset-db
+      DATABASE_USER: superset
+      DATABASE_PASSWORD: mysecretpassword
+      DATABASE_PORT: 5432
+      SUPERSET_SECRET_KEY: 'glz_yA*eHAw3'
+    depends_on:
+      - superset-db
+    
+
+  superset-db:
+    image: postgres:15.10
+    platform: linux/arm/v5
+    hostname: superset-db
+    environment:
+      POSTGRES_USER: superset
+      POSTGRES_DB: superset
+      POSTGRES_PASSWORD: mysecretpassword
+
+networks:
+  default:
+    name: hadoop-net
