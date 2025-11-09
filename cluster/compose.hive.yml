@@ -12,7 +12,7 @@ services:
       - DB_DRIVER=postgres
       - SERVICE_OPTS=-Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore_db -Djavax.jdo.option.ConnectionUserName=hive -Djavax.jdo.option.ConnectionPassword=password
     volumes:
-      - ./hive/postgresql-42.7.5.jar:/opt/hive/lib/postgresql-42.6.0.jar
+      - ./configuration/hive/drivers/postgresql-42.7.5.jar:/opt/hive/lib/postgresql-42.6.0.jar
     depends_on:
       - hive-metastore-db
 
@@ -44,8 +44,11 @@ services:
       - hive-metastore
     environment:
       - SERVICE_NAME=hiveserver2
-      - SERVICE_OPTS=-Dhive.metastore.uris=thrift://metastore:9083 -Dhive.metastore.expression.proxy=org.apache.hadoop.hive.ql.optimizer.ppr.PartitionExpressionForMetastore -Dhive.support.quoted.identifiers=none
       - IS_RESUME=true
+      - HADOOP_CONF_DIR=/opt/hadoop/conf
+    volumes:
+      - ./configuration/hadoop:/opt/hadoop/conf
+      - ./configuration/hive/hive-site.xml:/opt/hive/conf/hive-site.xml
 
 networks:
   default:

@@ -2,17 +2,12 @@ services:
   superset:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.superset
     hostname: superset
     ports:
       - '8080:8088'
-    environment:
-      DATABASE_DB: superset
-      DATABASE_HOST: superset-db
-      DATABASE_USER: superset
-      DATABASE_PASSWORD: mysecretpassword
-      DATABASE_PORT: 5432
-      SUPERSET_SECRET_KEY: 'glz_yA*eHAw3'
+    volumes:
+      - ./configuration/superset/superset_config.py:/app/superset_config.py
     depends_on:
       - superset-db
     

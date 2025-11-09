@@ -1,18 +1,34 @@
 services:
   namenode:
-    image: hadoop:3.4.2-java17    
+    build:
+      context: .
+      dockerfile: Dockerfile.hadoop
     hostname: hdfs-namenode
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: "2gb"
     ports: 
         - "9870:9870"
         - "8088:8088"
     command: > 
-      bash -c "hdfs namenode & yarn resourcemanager"
+      bash -c "hdfs namenode & yarn resourcemanager & sleep 20 && source /init_tez.sh && tail -f /dev/null"
     volumes:
      - ./namenode-data:/data/dfs/data/
+     - ./configuration/hadoop/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+     - ./configuration/tez/tez-site.xml:/usr/local/tez/conf/tez-site.xml
 
   datanode-1:
-    image: hadoop:3.4.2-java17
+    build:
+      context: .
+      dockerfile: Dockerfile.hadoop
     hostname: datanode1
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "2gb"
     depends_on: 
         - namenode
     command: >
@@ -20,19 +36,55 @@ services:
     ports:
       - "9864:9864"
       - "8042:8042"
+    volumes:
+     - ./configuration/hadoop/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+     - ./configuration/tez/tez-site.xml:/usr/local/tez/conf/tez-site.xml
     links:
         - namenode:hdfs-namenode
 
   datanode-2:
-    image: hadoop:3.4.2-java17
+    build:
+      context: .
+      dockerfile: Dockerfile.hadoop
     hostname: datanode2
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "2gb"
     depends_on: 
         - namenode
     command: >
-      bash -c "hdfs datanode & yarn nodemanager "
+      bash -c "hdfs datanode & yarn nodemanager"
     ports:
       - "9865:9864"
       - "8043:8042"
+    volumes:
+     - ./configuration/hadoop/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+     - ./configuration/tez/tez-site.xml:/usr/local/tez/conf/tez-site.xml
+    links:
+        - namenode:hdfs-namenode
+  
+  datanode-3:
+    build:
+      context: .
+      dockerfile: Dockerfile.hadoop
+    hostname: datanode3
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "2gb"
+    depends_on: 
+        - namenode
+    command: >
+      bash -c "hdfs datanode & yarn nodemanager"
+    ports:
+      - "9866:9864"
+      - "8044:8042"
+    volumes:
+     - ./configuration/hadoop/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+     - ./configuration/tez/tez-site.xml:/usr/local/tez/conf/tez-site.xml
     links:
         - namenode:hdfs-namenode
 

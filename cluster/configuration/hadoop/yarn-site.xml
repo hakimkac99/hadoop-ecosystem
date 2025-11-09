@@ -25,5 +25,25 @@
  <name>yarn.resourcemanager.hostname</name>
  <value>hdfs-namenode</value>
 </property>
-
+<property>
+  <name>yarn.resourcemanager.scheduler.class</name>
+  <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler</value>
+  <!-- <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value> -->
+  </property>
+<property>
+  <name>yarn.scheduler.maximum-allocation-mb</name>
+  <value>2048</value>  <!-- max of memory a container can have -->
+</property>
+<property>
+  <name>yarn.scheduler.maximum-allocation-vcores</name>
+  <value>1</value>
+</property>
+<property>
+  <name>yarn.nodemanager.resource.memory-mb</name>
+  <value>2048</value> <!--  memory available on the worker -->
+</property>
+<property>
+  <name>yarn.nodemanager.resource.cpu-vcores</name>
+  <value>1</value> 
+</property>
 </configuration>

@@ -8,7 +8,7 @@ services:
       - PATH=/opt/spark/bin:$PATH
       - PYSPARK_PYTHON=python3
     volumes:
-      - ./hadoop-config:/opt/hadoop/etc/hadoop
+      - ./configuration/hadoop:/opt/hadoop/etc/hadoop
       - ./spark-apps:/opt/spark/work-dir/apps
     ports:
       - "4040:4040"
@@ -31,7 +31,7 @@ services:
       SPARK_LOG_DIR: /tmp/spark-logs
       SPARK_HISTORY_OPTS: "-Dspark.history.fs.logDirectory=hdfs://hdfs-namenode:9000/spark-logs -Dspark.history.ui.bindAddress=0.0.0.0"
     volumes:
-      - ./hadoop-config:/opt/hadoop/etc/hadoop
+      - ./configuration/hadoop:/opt/hadoop/etc/hadoop
     links:
       - namenode:hdfs-namenode
 
