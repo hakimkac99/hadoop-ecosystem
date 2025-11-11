@@ -168,7 +168,7 @@ Access : http://localhost:18080/
 Spark job UI is only available when the job is still running. In order to keep history and be able to access the UI for old spark jobs,
 the Spark history server can be used.
 
-How does it work ? Spark jobs' logs are stored in HDFS (/spark/logs) which are read by the Spark history server and rendered in the UI.
+How does it work ? Spark jobs' logs are stored in HDFS (/spark-logs) which are read by the Spark history server and rendered in the UI.
 
 ![alt text](doc/spark-history-server-ui.png)
 
