@@ -40,7 +40,7 @@ class SchedulesBronzeTable(ETLTable):
             }
 
         except AnalysisException as e:
-            self.logger.warn(f"'{file_name}' file failed to read : {e.getMessage()}")
+            self.logger.warn(f"'{file_name}' file failed to read : {str(e)}")
             return None
 
     def transform(self, upstream_dataframes) -> DataFrame:

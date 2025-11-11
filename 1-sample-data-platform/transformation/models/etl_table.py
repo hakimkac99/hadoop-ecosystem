@@ -103,7 +103,7 @@ class ETLTable(ABC):
         try:
             df: DataFrame = self.spark.read.parquet(storage_path)
         except AnalysisException as e:
-            self.logger.warn(e.getMessage())
+            self.logger.warn(str(e))
             return None
 
         if partition_values:

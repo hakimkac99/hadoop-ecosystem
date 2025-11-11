@@ -69,12 +69,13 @@ class FactScheduledStopsSilverTable(ETLTable):
             ),
         ).withColumn(
             "valid_dates",
-            F.filter(
-                "scheduled_dates",
-                lambda d: F.substring(
-                    F.col("schedule_days_runs"), (F.dayofweek(d) + 5) % 7 + 1, 1
+            F.expr(
+                """
+                filter(
+                    scheduled_dates,
+                    d -> substring(schedule_days_runs, (dayofweek(d) + 5) % 7 + 1, 1) = '1'
                 )
-                == 1,
+                """
             ),
         )
 

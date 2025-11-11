@@ -1,11 +1,21 @@
 # an image having both PySpark setup (including java) and Prefect.
 
-FROM apache/spark:4.0.0-python3
+FROM spark:3.5.7-scala2.12-java11-ubuntu
+
 
 USER root
 
-# Install Prefect
-RUN pip install --no-cache-dir prefect==3.4.12
+RUN set -ex; \
+    apt-get update; \
+    apt-get install -y software-properties-common wget; \
+    add-apt-repository ppa:deadsnakes/ppa; \
+    apt-get update; \
+    apt-get install -y python3.11 python3.11-venv python3.11-distutils wget; \
+    wget https://bootstrap.pypa.io/get-pip.py; \
+    python3.11 get-pip.py; \
+    rm get-pip.py; \
+    rm -rf /var/lib/apt/lists/*
+
 
 # Copy your flows
 COPY prefect_flows /opt/prefect/prefect_flows
