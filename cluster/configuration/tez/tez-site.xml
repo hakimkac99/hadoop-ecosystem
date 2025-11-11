@@ -13,8 +13,4 @@
         <name>tez.use.cluster.hadoop-libs</name>
         <value>true</value>
     </property>
-    <property>
-        <name>tez.tez-ui.history-url.base</name>
-        <value>true</value>
-    </property>
 </configuration>

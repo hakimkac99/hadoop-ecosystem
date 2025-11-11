@@ -49,6 +49,7 @@ services:
     volumes:
       - ./configuration/hadoop:/opt/hadoop/conf
       - ./configuration/hive/hive-site.xml:/opt/hive/conf/hive-site.xml
+      - ./configuration/tez/tez-site.xml:/opt/tez/conf/tez-site.xml
 
 networks:
   default:
