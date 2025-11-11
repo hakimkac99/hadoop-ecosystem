@@ -10,6 +10,9 @@ Table of contents
       - [1.4. YARN (Yet another resource negotiator)](#14-yarn-yet-another-resource-negotiator)
     - [2. Apache Hive](#2-apache-hive)
     - [3. Apache Spark](#3-apache-spark)
+    - [3.1. Spark history server](#31-spark-history-server)
+    - [4. Apache Superset](#4-apache-superset)
+    - [5. Prefect](#5-prefect)
 - [TODO](#todo)
 
 
@@ -38,8 +41,9 @@ Note that only basic Hadoop components are part of this project.
 
  ![alt text](doc/hadoop-cluster-archi.png?)
 
-Hadoop version : 3.4.2
-Java version : 17
+Hadoop version : 3.4.1
+Java version : 11
+Tez (Hive engine) version : 0.10.5
 
 The Hadoop image is built from `cluster/Dockerfile.hadoop` file : `cd cluster && docker build -f Dockerfile.hadoop -t hadoop:3.4.2-java17 .`
 
@@ -80,7 +84,7 @@ This will enable fault tolerance.
         * Run HDFS commands : e.g. `hadoop fs -ls /`
     * By creating another hadoop client container and connecting it to the Namenode ...
 
-* It is also possible to interact with HDFS using the Namenode UI : http://localhost:9870/explorer.html
+* It is also possible to interact with HDFS using the HDFS browser UI : http://localhost:9870/explorer.html
     ![alt text](doc/hdfs-exporer-ui.png)
 
 #### 1.4. YARN (Yet another resource negotiator)
@@ -93,6 +97,8 @@ Manage the Hadoop cluster resources, schedule compute resources, allocate resour
     ![Alt text](doc/yarn-ui.png)
 
 ### 2. Apache Hive
+
+Hive version installed in the cluster : 4.0.1
 
 ![alt text](doc/hive-archi.png?)
 
@@ -109,6 +115,8 @@ Hive provides HiveQL as a SQL-like query tool. It executes MapReduce jobs behind
     * **hive-metastore-db** : A Postgresql database used by Hive Metastore in order to stor metadata.
 
 * Hive server and Hive metastore services are created using the official apache Hive Docker image. https://hub.docker.com/r/apache/hive
+
+* Apache Tez is used as Hive engine : when running a hive query, a Tez job is submitted to YARN for execution.
 
 * Access Hive Server UI : http://localhost:10002
 
@@ -153,14 +161,27 @@ In this project, the objective is to run Spark jobs on top of the Hadoop cluster
 
 ![alt text](doc/spark-ui.png)
 
+### 3.1. Spark history server
+
+Access : http://localhost:18080/
+
+Spark job UI is only available when the job is still running. In order to keep history and be able to access the UI for old spark jobs,
+the Spark history server can be used.
+
+How does it work ? Spark jobs' logs are stored in HDFS (/spark/logs) which are read by the Spark history server and rendered in the UI.
+
+![alt text](doc/spark-history-server-ui.png)
+
+### 4. Apache Superset
+
+### 5. Prefect
 
 # TODO
 
-* [configuration] add the ability to update Hadoop cluster default settings (namenode, datanode and YARN) using a local volume.
+* [documentation] document Superset setup
 * [documentation] document Prefect server/worker creation, deployments, secrets etc.
-* [documentation] document Spark history server
 * [configuration] create /spark-logs in HDFS automatically for Spark history server logs
 * [documentation] document PySpark packaging process
 * [documentation] document Yarn cluster mode, client mode when submitting Spark jobs
-* [configuration] performance parameters : number of workers, used memory, CPUs etc.
+* [documentation] performance parameters : number of workers, used memory, CPUs etc.
 * [development] include python packages to the PySpark package (zip)
