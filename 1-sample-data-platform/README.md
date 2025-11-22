@@ -17,8 +17,8 @@ Data used in this project is from ['Open Rail Data Wiki'](https://wiki.openraild
 For this sample data platform, an ETL (Extract, Transform, Load) approach is used. 
 
 To achieve this :
-1. Data is first loaded from data sources to a landing zone (Bronze layer). No transformation in this stage, only adding some metadata like the ingestion date time.
-2. Data is then deduplicated, cleaned and transformed in a staging zone (Silver layer).
+1. Data is first loaded from data sources to a landing zone "Bronze layer". No transformation in this stage, only adding some metadata like the ingestion date time.
+2. Data is then deduplicated, cleaned and transformed into multidimensional star format in a staging zone "Silver layer".
 3. Finally, data is structured in "Gold layer" for Analytics and for answering Business questions.
 
 Notes : 
@@ -27,4 +27,36 @@ Notes :
 
 # Data warehouse
 
-Data from the Gold layer is exposed to Hive.
+Multidimensional Silver tables and Gold analytics tables are created and exposed through Hive Data warehouse.
+
+# HDFS files
+
+e.g. HDFS Silver files
+
+![alt text](doc/hdfs-silver-files.png)
+
+# Hive queries
+
+![alt text](doc/hive-queries.png)
+
+# YARN application
+
+![alt text](doc/yarn-applications.png)
+
+# Superset Dashboard
+
+![alt text](doc/superset-dashboard.png)
+
+![alt text](doc/supersert-chart.png)
+
+
+# Prefect
+
+Daily Prefect deployment run
+
+![alt text](doc/prefect-daily-run.png)
+
+# Technical Architecture
+
+![alt text](doc/sample-dp-technical-architecture.png)
+
