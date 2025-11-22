@@ -29,10 +29,13 @@ Notes :
 
 Multidimensional Silver tables and Gold analytics tables are created and exposed through Hive Data warehouse.
 
+# Data model (star schema)
+
+![alt text](../doc/data-model.png)
+
 # Technical Architecture
 
 ![alt text](../doc/sample-dp-technical-architecture.png)
-
 
 # HDFS files
 
