@@ -29,34 +29,33 @@ Notes :
 
 Multidimensional Silver tables and Gold analytics tables are created and exposed through Hive Data warehouse.
 
+# Technical Architecture
+
+![alt text](../doc/sample-dp-technical-architecture.png)
+
+
 # HDFS files
 
 e.g. HDFS Silver files
 
-![alt text](doc/hdfs-silver-files.png)
+![alt text](../doc/hdfs-silver-files.png)
 
 # Hive queries
 
-![alt text](doc/hive-queries.png)
+![alt text](../doc/hive-queries.png)
 
 # YARN application
 
-![alt text](doc/yarn-applications.png)
+![alt text](../doc/yarn-applications.png)
 
 # Superset Dashboard
 
-![alt text](doc/superset-dashboard.png)
+![alt text](../doc/superset-dashboard.png)
 
-![alt text](doc/supersert-chart.png)
-
+![alt text](../doc/supersert-chart.png)
 
 # Prefect
 
 Daily Prefect deployment run
 
-![alt text](doc/prefect-daily-run.png)
-
-# Technical Architecture
-
-![alt text](doc/sample-dp-technical-architecture.png)
-
+![alt text](../doc/prefect-daily-run.png)
