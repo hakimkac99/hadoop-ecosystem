@@ -98,7 +98,9 @@ class ETLTable(ABC):
         self.logger.info(
             f"Start reading {self.storage_path} using these partition values : {partition_values} ..."
         )
-        storage_path = self.storage_path + ("_scd1_copy" if read_scd1_copy else "")
+        storage_path = f"hdfs://hdfs-namenode:9000/user/root/{self.storage_path}" + (
+            "_scd1_copy" if read_scd1_copy else ""
+        )
 
         try:
             df: DataFrame = self.spark.read.parquet(storage_path)

@@ -1,12 +1,14 @@
-# from bronze.schedules import SchedulesBronzeTable
+from gold.stops_number_per_location_per_date import (
+    StopsCountPerLocationPerDateGoldTable,
+)
 from helpers.hdfs import HDFSClient
 from pyspark.sql import SparkSession
-from silver.fact_scheduled_stops import FactScheduledStopsSilverTable
 
 
 def run_spark_transformations(spark: SparkSession, hdfs: HDFSClient):
-    fact_scheduled_stops = FactScheduledStopsSilverTable(spark=spark, hdfs=hdfs)
-    fact_scheduled_stops.run_etl(run_upstream=True)
+    StopsCountPerLocationPerDateGoldTable(spark=spark, hdfs=hdfs).run_etl(
+        run_upstream=False
+    )
 
 
 if __name__ == "__main__":
@@ -15,10 +17,8 @@ if __name__ == "__main__":
         SparkSession.builder.appName("Transform Rail data")
         .config("spark.eventLog.enabled", "true")
         .config("spark.eventLog.dir", "hdfs://hdfs-namenode:9000/spark-logs")
-        # .config("spark.executor.memory", "4g")       # executor heap
-        # .config("spark.executor.cores", "2")         # cores per executor
-        # .config("spark.executor.instances", "4")     # total executors
-        # .config("spark.yarn.executor.memoryOverhead", "1024")
+        .config("spark.executor.memory", "1600m")
+        .config("spark.executor.cores", "1")
         .enableHiveSupport()
         .getOrCreate()
     )
