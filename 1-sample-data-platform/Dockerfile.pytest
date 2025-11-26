@@ -1,0 +1,13 @@
+FROM apache/spark:3.5.7-python3
+
+USER root
+
+RUN pip install pytest pandas PyArrow
+
+ENV PYSPARK_PYTHON=python3
+ENV PATH=/opt/spark/bin:$PATH
+ENV PYTHONPATH=/opt/spark/python:/opt/spark/python/lib/py4j-0.10.9.7-src.zip
+
+COPY ./transformation /opt/spark/work-dir/apps/transformation
+
+WORKDIR /opt/spark/work-dir/apps/transformation

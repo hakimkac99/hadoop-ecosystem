@@ -17,12 +17,12 @@ RUN set -ex; \
     rm -rf /var/lib/apt/lists/*
 
 
-# Copy your flows
+# Copy Prefect flows
 COPY prefect_flows /opt/prefect/prefect_flows
 COPY requirements.txt /opt/prefect/requirements.txt
 
-# Install additional Python dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir -r /opt/prefect/requirements.txt
 
-# postgresql jdbc driver for the HIVE metastore connection
+# Postgresql jdbc driver for the HIVE metastore connection
 COPY drivers /opt/spark/jars/

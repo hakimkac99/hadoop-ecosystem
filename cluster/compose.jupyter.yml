@@ -5,6 +5,7 @@ services:
       - 8888:8888
     volumes:
       - ./jupyter_data:/home/jovyan/jupyter_data
+      - ../1-sample-data-platform/transformation:/home/jovyan/transformation
     command: "start-notebook.sh --NotebookApp.token="
 
 networks:

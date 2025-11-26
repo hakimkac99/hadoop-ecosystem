@@ -178,6 +178,7 @@ How does it work ? Spark jobs' logs are stored in HDFS (/spark-logs) which are r
 
 # TODO
 
+* [cicd] init Github actions, pytest PySpark transformations
 * [documentation] document Superset setup
 * [documentation] document Prefect server/worker creation, deployments, secrets etc.
 * [configuration] create /spark-logs in HDFS automatically for Spark history server logs
