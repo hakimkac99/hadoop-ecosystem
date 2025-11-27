@@ -58,7 +58,7 @@ def scd1_merge(
         c
         for c in df_target.columns
         if c not in primary_keys
-        and (manage_surrogate_key and c != surrogate_key_column_name)
+        and not (manage_surrogate_key and c == surrogate_key_column_name)
     ]
 
     # Join source and target
@@ -77,9 +77,8 @@ def scd1_merge(
         *primary_keys,
         *select_columns(
             "source",
-            non_key_columns + [surrogate_key_column_name]
-            if manage_surrogate_key
-            else [],
+            non_key_columns
+            + ([surrogate_key_column_name] if manage_surrogate_key else []),
         ),
     )
 
@@ -97,9 +96,8 @@ def scd1_merge(
         *primary_keys,
         *select_columns(
             "target",
-            non_key_columns + [surrogate_key_column_name]
-            if manage_surrogate_key
-            else [],
+            non_key_columns
+            + ([surrogate_key_column_name] if manage_surrogate_key else []),
         ),
     )
 
@@ -108,9 +106,8 @@ def scd1_merge(
         *primary_keys,
         *select_columns(
             "target",
-            non_key_columns + [surrogate_key_column_name]
-            if manage_surrogate_key
-            else [],
+            non_key_columns
+            + ([surrogate_key_column_name] if manage_surrogate_key else []),
         ),
     )
 
